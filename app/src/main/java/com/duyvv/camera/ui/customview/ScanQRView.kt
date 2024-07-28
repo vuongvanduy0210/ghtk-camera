@@ -26,15 +26,6 @@ class ScanQRView @JvmOverloads constructor(
         isAntiAlias = true
     }
 
-    private val backgroundPaint = Paint().apply {
-        color = Color.BLACK
-        alpha = 180 // Đặt độ mờ (0 - 255)
-    }
-
-    private val clearPaint = Paint().apply {
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-    }
-
     private val cornerRadius = 70f
     private val lineLength = 60f
 
@@ -48,11 +39,17 @@ class ScanQRView @JvmOverloads constructor(
         )
 
         // Vẽ lớp mờ lên toàn bộ màn hình
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), backgroundPaint)
+        canvas.drawRect(0f, 0f,
+            width.toFloat(), height.toFloat(),
+            Paint().apply {
+                color = Color.BLACK
+                alpha = 180
+            }
+        )
 
         // Xác định vị trí và kích thước của hình vuông bo tròn
         val centerX = width / 2f
-        val centerY = height / 2f
+        val centerY = height / 2.5f
         val rectSize = 700f // Kích thước hình vuông
         val left = centerX - rectSize / 2
         val top = centerY - rectSize / 2
@@ -68,6 +65,18 @@ class ScanQRView @JvmOverloads constructor(
 
         // draw border
         drawBorder(canvas, left, top, right, bottom)
+
+        // draw text
+        canvas.drawText(
+            "Scan QR code",
+            width / 2f,
+            centerY + rectSize / 2 + 100,
+            Paint().apply {
+                color = Color.WHITE
+                textSize = 60f
+                textAlign = Paint.Align.CENTER
+            }
+        )
     }
 
     private fun drawBorder(
@@ -171,6 +180,8 @@ class ScanQRView @JvmOverloads constructor(
             left + padding, top + padding,
             right - padding, bottom - padding
         )
-        canvas.drawRoundRect(roundRect, cornerRadius, cornerRadius, clearPaint)
+        canvas.drawRoundRect(roundRect, cornerRadius, cornerRadius, Paint().apply {
+            xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+        })
     }
 }
