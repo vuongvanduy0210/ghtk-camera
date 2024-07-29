@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.duyvv.camera.databinding.FragmentScanQrBinding
+import com.duyvv.camera.utils.isValidUrl
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -113,8 +114,10 @@ class ScanQRFragment : Fragment() {
                 data[0].rawValue?.let {
                     Log.d("TAG", it)
                     Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                    startActivity(it)
-                    imageAnalysis.clearAnalyzer()
+                    if (isValidUrl(it)) {
+                        imageAnalysis.clearAnalyzer()
+                        startActivity(it)
+                    }
                 }
             }
         }
